@@ -1,0 +1,20 @@
+======================================================
+COE67-222 Operating Systems - Lab 06 Report
+Name: Mr.Phichaipusit Thirakun
+Student ID: 67110916
+======================================================
+
+1. FIFO vs LRU (Phase 2):
+In the page_replacement.py script, why did the LRU algorithm perform better (have fewer page faults) than the FIFO algorithm for the given reference string? Explain how LRU decides which page to evict.
+Answer:
+LRU (Least Recently Used) typically performs better because it utilizes the concept of "temporal locality," meaning it assumes pages accessed recently will likely be needed again soon. FIFO (First-In, First-Out) simply evicts the oldest loaded page, even if it is still being actively used. LRU decides which page to evict by keeping track of when each page was last accessed and always choosing to replace the page that has been unused for the longest period of time.
+
+2. Understanding Thrashing (Phase 3):
+Based on your observation of ai_thrashing.py, define "Thrashing" in your own words. Why is the processing time significantly higher in Scenario 2?
+Answer:
+Based on the terminal output, "Thrashing" is a critical state where the system runs out of physical RAM, forcing the Operating System to constantly swap data back and forth between the RAM and the much slower secondary disk storage. The processing time is significantly higher in Scenario 2 (1.6517 seconds vs. 0.4809 seconds) because disk I/O speeds are drastically slower than RAM access speeds, causing the system to spend more time swapping pages than actually executing the training loop (making it roughly 3 times slower).
+
+3. AI Engineering Decision:
+If you are training an AI model and your system begins to thrash because the RAM is full, lowering the batch_size in your Python code is a common solution. How does lowering the batch_size help the Operating System resolve the Thrashing problem?
+Answer:
+Lowering the batch_size reduces the memory footprint required for each training iteration. It decreases the amount of data (like tensors, weights, and intermediate calculations) that needs to be loaded into memory all at once. By keeping the total memory usage below the physical RAM capacity (similar to Scenario 1), the Operating System no longer needs to swap pages to the disk, thereby completely eliminating the thrashing bottleneck and restoring normal processing speeds.

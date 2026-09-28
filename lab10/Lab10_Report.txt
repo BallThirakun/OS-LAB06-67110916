@@ -1,0 +1,25 @@
+======================================================
+COE67-222 Operating Systems - Lab 10 Report (Final)
+Name: Mr.Phichaipusit Thirakun
+Student ID: 67110916
+======================================================
+1. The Role of the Operating System:
+In this mini-project, our Python script simulated the major responsibilities of an Operating System. Match the specific code behavior in ultimate_cluster_os.py to the corresponding OS concept you learned throughout the semester:
+
+File System & Permissions (Lab 9):
+Answer: The code simulated OS-level file protection (likely using try-except blocks catching PermissionError or checking file attributes). Workload D failed because it attempted to access or modify a protected system file or production model weight (similar to the read-only production_resnet50.pth from Lab 9) without having the appropriate write permissions, triggering a security block.
+
+Memory Management (Labs 5/6):
+Answer: The OS prevented Thrashing by using a while loop that constantly checked the available RAM before allowing a process to start. If the required memory for a new workload exceeded the available physical RAM (e.g., pushing beyond the 64GB limit shown in the terminal), the while loop forced the workload to wait in the queue until existing jobs finished and freed up enough memory, thus preventing the system from running out of memory and swapping to disk.
+
+Concurrency & Deadlocks (Labs 3/4):
+Answer: The OS sorted the requested GPUs (e.g., always requesting GPU 0, then GPU 1, then GPU 2) to enforce a strict "Global Resource Ordering." By forcing all processes to request resources in the exact same numerical order, the OS mathematically eliminated the possibility of a "Circular Wait," which is a primary condition required for deadlocks to occur.
+
+2. Hardware Utilization:
+Look at the output of your Live Dashboard. Explain how the OS successfully ran Workload A (LLaMA Training), Workload B (Preprocessing), and Workload C (Inference) AT THE SAME TIME without crashing. Why didn't they block each other?
+Answer:
+The OS successfully ran them at the same time by utilizing concurrent execution and strict resource isolation. The OS scheduler distributed the available hardware efficiently based on what each task actually needed: Workload A (LLaMA Training) locked the majority of the GPUs (e.g., GPUs 0, 1, and 2) and a large chunk of RAM for heavy computation. Workload B (Preprocessing) is CPU and I/O heavy, so the OS allocated CPU cores and RAM to it without needing any GPUs. Meanwhile, Workload C (Inference) was able to lock the remaining unused GPU (e.g., GPU 3). Because the OS safely managed the allocation of these independent resources and ensured the total requested RAM did not exceed the physical limit (64GB), all three workloads could execute in parallel without deadlocking, crashing, or blocking each other.
+3. Course Reflection (AI Engineering Context):
+You are now applying for a role as a Machine Learning Operations (MLOps) Engineer. Write a short paragraph explaining how understanding Operating Systems (Process queues, RAM/Virtual Memory limits, Deadlock avoidance, File systems) gives you an advantage over a programmer who only knows how to write basic Python/PyTorch scripts.
+Answer:
+Understanding Operating Systems provides a massive advantage in MLOps because real-world AI engineering goes far beyond simply writing a PyTorch script; it requires managing massive workloads on constrained, expensive hardware clusters. A programmer who only knows PyTorch often assumes infinite resources, leading to Out-Of-Memory (OOM) crashes, severe bottlenecks, or corrupted production models. By understanding OS concepts, I can efficiently schedule concurrent process queues to maximize GPU utilization, implement memory management to prevent thrashing during large model training, architect safe concurrent resource locking to avoid deadlocks in distributed setups, and enforce strict file system permissions to secure critical model weights. This ensures the entire AI infrastructure remains robust, secure, and highly performant under heavy production loads.

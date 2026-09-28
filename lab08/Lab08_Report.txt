@@ -1,0 +1,19 @@
+======================================================
+COE67-222 Operating Systems - Lab 08 Report
+Name: Mr.Phichaipusit Thirakun
+Student ID: 67110916
+======================================================
+1. Disk Scheduling (Phase 2):
+Looking at the output of disk_scheduler.py, why did the SCAN algorithm result in a significantly lower "Total Head Movement" compared to FCFS? Explain the logic behind the Elevator behavior.
+Answer:
+The SCAN algorithm resulted in a much lower Total Head Movement (331 cylinders) compared to FCFS (640 cylinders) because it avoids random, erratic movements. FCFS processes requests strictly in the order they arrive, causing the disk head to violently jump back and forth (e.g., moving from track 183 all the way down to 37, then back up to 122). The SCAN algorithm operates using "Elevator behavior," meaning the disk head moves continuously in a single direction (e.g., sweeping upwards from 53 to 199), servicing all requests it encounters along that path. Once it reaches the end, it reverses direction and services the remaining requests (sweeping down to 14). This organized, sweeping approach drastically minimizes wasted travel time and seek distance.
+
+2. I/O Bound Concept:
+If an Operating System is described as being "I/O Bound" during a task, what does that actually mean for the CPU? Is the CPU at 100% usage or is it mostly idle? Why?
+Answer:
+If an Operating System is "I/O Bound" during a task, it means the overall speed of the application is limited by the speed of Input/Output operations (such as reading from or writing to a disk drive), rather than the processing speed of the CPU. In this state, the CPU is mostly idle (operating at very low usage). This occurs because CPUs are exponentially faster than mechanical disks or even SSDs. The CPU quickly finishes processing the data it currently has in memory and then must sit idle, wasting processing cycles while waiting for the slow storage device to fetch and deliver the next chunk of data.
+
+3. AI Industry Connection (Phase 3):
+Explain why storing an AI image dataset as 1,000,000 separate .jpg files causes high I/O overhead and GPU starvation compared to packing them into a single sequential binary format (e.g., TFRecord, WebDataset, or HDF5).
+Answer:
+As demonstrated by the ai_dataset_io.py terminal output, reading separate small files (0.0419 seconds) is significantly slower than reading a single packed file (0.0011 seconds). Storing 1,000,000 separate .jpg files causes massive I/O overhead because for every single image, the OS must perform costly operations: searching the file system directory, retrieving metadata (inodes), opening the file, seeking the data blocks on the disk, and closing the file. This creates an I/O bottleneck. "GPU starvation" occurs because modern GPUs process data incredibly fast; if the data is stored in millions of separate files, the slow storage I/O cannot fetch and feed the images to the GPU fast enough. The GPU ends up sitting idle, "starving" for data to process. Packing files into a single binary format allows the system to read a continuous, sequential stream of data in one large operation, completely bypassing the massive file-opening overhead and keeping the GPU fully fed.

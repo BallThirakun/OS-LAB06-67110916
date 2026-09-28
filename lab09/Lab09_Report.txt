@@ -1,0 +1,20 @@
+======================================================
+COE67-222 Operating Systems - Lab 09 Report
+Name: Mr.Phichaipusit Thirakun
+Student ID: 67110916
+======================================================
+
+1. Inodes and Metadata:
+In the inode_inspector.py script, we printed the "Inode Number". If you rename the file using the Linux mv command, will the Inode Number change? Why or why not? (Hint: Think about how the OS separates the file name from the actual data).
+Answer:
+No, the Inode Number will not change (assuming the file remains on the same filesystem). The Operating System separates the human-readable file name from the actual data and metadata. The file name is simply a string entry in a directory table that points to an Inode. The Inode itself contains the metadata (like file size, permissions, and creation dates, as seen in the terminal) and pointers to the actual data blocks on the disk. Renaming a file using mv only updates the name string in the directory table, while the underlying Inode and its data remain entirely unchanged.
+
+2. POSIX Permissions:
+If you want to set a file's permission so that the Owner has Read/Write/Execute (7), the Group has Read/Execute (5), and Others have absolutely no access (0), what would be the 3-digit octal number you pass into `os.chmod()`?
+Answer:
+The 3-digit octal number would be 750. When passing this into Python's os.chmod() function, it is written with the octal prefix as 0o750.
+
+3. The AI Context:
+Why is it safer to rely on Operating System file permissions (like os.chmod(0o444)) to protect production model weights rather than relying solely on application-level logic or Python try-except blocks?
+Answer:
+It is safer to rely on Operating System file permissions because they are enforced at the OS Kernel level, providing a strict, system-wide safeguard. As demonstrated in the os_security.py and ai_weight_protection.py terminal outputs, when a file is set to Read-Only and a script (or a "Junior Dev") accidentally tries to open the production model in write mode, the OS Kernel immediately blocks it and throws a PermissionError. Application-level logic is prone to human error, logic bugs, or can be easily bypassed if a developer forgets to implement a check. Kernel-level permissions guarantee that the expensive production model cannot be accidentally overwritten or corrupted, regardless of mistakes in the application code.

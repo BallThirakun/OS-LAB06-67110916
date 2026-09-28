@@ -1,0 +1,24 @@
+======================================================
+COE67-222 Operating Systems - Lab 07 Report
+Name: Mr.Phichaipusit Thirakun
+Student ID: 67110916
+======================================================
+
+1. The Convoy Effect (Phase 2):
+In the FCFS output of `cpu_scheduler.py`, what is the "Convoy Effect"? How did the presence of Process P1 affect the waiting times of P2 and P3?
+Answer:
+The "Convoy Effect" occurs in the First-Come, First-Served (FCFS) scheduling algorithm when multiple shorter processes are forced to wait for a single, long-running process to release the CPU. Based on the terminal output, Process P1 is a long process that takes 10 time units. Because it arrived first, the much shorter processes P2 (2 units) and P3 (3 units) were stuck behind it. This drastically inflated their waiting times—P2 had to wait 10 units of time, and P3 had to wait 12 units of time—resulting in a high Average Waiting Time of 7.33.
+
+2. Choosing the Time Quantum:
+In Round Robin, the Time Quantum is critical.
+
+- What happens if the OS sets the Time Quantum extremely large (e.g., Quantum = 100)? Which algorithm does RR start to behave like?
+- What happens if the OS sets the Time Quantum extremely small (e.g., Quantum = 0.0001)? (Hint: Think about Context Switching overhead).
+Answer:
+- If the Time Quantum is set extremely large (e.g., Quantum = 100), processes will likely complete their execution before their quantum expires. Consequently, the Round Robin algorithm will behave exactly like the First-Come, First-Served (FCFS) algorithm.
+- If the Time Quantum is set extremely small (e.g., Quantum = 0.0001), the CPU will constantly pause and switch between processes. The operating system will spend the majority of its processing power on the "Context Switching overhead" (saving and loading process states) rather than executing actual program instructions, causing severe performance degradation.
+
+3. AI Context:
+In Phase 3, we used a Round Robin approach for generating tokens in an LLM. Explain why iteration-level Round Robin scheduling prevents long user queries from starving short queries, and how it improves perceived latency (Time To First Token / TTFT) for interactive AI applications.
+Answer:
+Iteration-level Round Robin (often called Continuous Batching in AI) prevents starvation by generating tokens for multiple users concurrently in alternating turns, rather than completing one entire request before starting the next. As seen in the `ai_inference_scheduler.py` terminal output, under FCFS, `User_B_Math` (which only needed 2 tokens) had to wait for the entirety of `User_A_Essay` (10 tokens) to finish. Under Round Robin, `User_B_Math` finished early because it received its tokens simultaneously alongside `User_A`. This approach significantly improves the Time To First Token (TTFT) because every user in the queue receives their first response almost immediately, resulting in a much more responsive and interactive experience.
